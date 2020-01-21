@@ -15,6 +15,9 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('bio')->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -32,5 +35,12 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+    }
+    /**
+     * Récupère les compétences de l'utilisateur.
+     */
+    public function skills()
+    {
+        return $this->belongsToMany('App\Skill')->withPivot('level');
     }
 }
