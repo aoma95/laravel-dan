@@ -25,6 +25,6 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
         'firstname' => $faker->firstname,
         'lastname' => $faker->lastname,
-        'bio' => $faker->text,
+        'bio' => $faker->text
     ];
 });
