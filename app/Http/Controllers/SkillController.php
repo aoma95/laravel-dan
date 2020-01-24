@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\SkillUser;
 use Illuminate\Http\Request;
 use App\Skill;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
+//use Illuminate\Support\Facades\DB;
 
 class SkillController extends Controller
 {
@@ -41,11 +46,20 @@ class SkillController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Skill'=>'required',
+        ]);
+        $user = User::find($request->post("id"));
+        $skill= Skill::find($request->post("Skill"));
+        $user->skills()->attach($skill, array('level' => 0));
+        $id=$request->post("id");
+        $redi ="/skill/$id/edit";
+        return redirect($redi);
     }
 
     /**
@@ -68,6 +82,12 @@ class SkillController extends Controller
     public function edit($id)
     {
         //
+        $user = User::find($id);
+        $skillsId=[];
+        foreach ($user->skills()->get() as $element){
+            array_push($skillsId,$element->id);
+        }
+        return view('skill.edit',compact('skillsId'));
     }
 
     /**
@@ -79,17 +99,31 @@ class SkillController extends Controller
      */
     public function update(Request $request, $id)
     {
+       foreach ($request->except('_token') as $idSkill =>$value){
+           $user = User::find($id);
+           $skill= Skill::find($idSkill);
 
+           $user->skills()->updateExistingPivot($skill, array('level' => $value), false);
+       }
+        return redirect('/home');
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
+        $request->validate([
+            'Skill'=>'required',
+        ]);
+        $user = User::find($id);
+        $user->skills()->detach($request->post("Skill"));
+        $redi ="/skill/$id/edit";
+        return redirect($redi);
     }
 }

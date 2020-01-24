@@ -29,13 +29,13 @@
                 <div class="card-header">Compétence</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        {{Auth::user()->skills()->get()}}
                         @foreach (Auth::user()->skills()->get() as $skill)
-                            <il>{{ $skill->name }} : {{$skill->pivot->level}}</il>
+                            <il>{{ $skill->name }} : level {{$skill->pivot->level}}<div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{$skill->pivot->level*20}}%" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div></il>
                         @endforeach
-{{--                        <li class="list-group-item">Prénom : {{Auth::user()->skills()->get()}}</li>--}}
                     </ul>
-{{--                    <a href="{{route('user.edit',Auth::user()->id)}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-1">Modifier</button></a>--}}
+                    <a href="{{route('skill.edit',Auth::user()->id)}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-2">Modifier</button></a>
                 </div>
             </div>
         </div>
