@@ -7,10 +7,10 @@
                 <div class="card">
                     <div class="card-header">Modifier niveaux de Compétence</div>
                     <div class="card-body">
-                        <form method="POST" class="form" name="formulaire" action="{{route('skill.update', Auth::user()->id)}}">
+                        <form method="POST" class="form" name="formulaire" action="{{route('skill.update', Auth()->user()->id)}}">
                             @method('PATCH')
                             @csrf
-                            @foreach (Auth::user()->skills()->get() as $skill)
+                            @foreach (Auth()->user()->skills()->get() as $skill)
                                 <div class="form-group col-md-12">
                                     <label for="name">{{$skill->name}} level :</label>
                                     <select name="{{$skill->id}}" class="form-control">
@@ -33,13 +33,13 @@
                 <div class="card">
                     <div class="card-header">Suppression de Compétence</div>
                     <div class="card-body">
-                        <form method="POST" class="form" name="deleteSkill" action="{{route('skill.destroy', Auth::user()->id)}}">
+                        <form method="POST" class="form" name="deleteSkill" action="{{route('skill.destroy', Auth()->user())}}">
                             @method('DELETE')
                             @csrf
                             <div class="form-group col-md-12">
                                 <select name="Skill" class="form-control">
                                     <option selected disabled>Compétence à supprimer</option>
-                                    @foreach (Auth::user()->skills()->get() as $skill)
+                                    @foreach (Auth()->user()->skills()->get() as $skill)
                                         <option value="{{$skill->id}}">{{$skill->name}}</option>
                                     @endforeach
                                 </select>
@@ -51,10 +51,10 @@
                 <div class="card mt-1">
                     <div class="card-header">Ajout de Compétence</div>
                     <div class="card-body">
-                        <form method="POST" class="form" name="ajoutSkill" action="{{route('skill.store')}}">
+                        <form method="POST" class="form" name="ajoutSkill" action="{{route('skill.store',Auth()->user())}}">
                             @csrf
                             <div class="form-group col-md-12">
-                                <input type="hidden" id="id" name="id" value="{{Auth::user()->id}}" />
+                                <input type="hidden" id="id" name="id" value="{{Auth()->user()->id}}" />
                                 <select name="Skill" class="form-control">
                                     <option selected disabled>Compétence à ajouter</option>
                                     @foreach(\App\Skill::all()->whereNotIn('id', $skillsId) as $skill)

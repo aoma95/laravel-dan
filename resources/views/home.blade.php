@@ -19,8 +19,7 @@
                         <li class="list-group-item">Surnom : {{Auth::user()->name}}</li>
                         <li class="list-group-item">Email : {{Auth::user()->email}}</li>
                     </ul>
-                    <a href="{{route('user.edit',Auth::user()->id)}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-1">Modifier</button></a>
-{{--                    <a href="{{route('user.edit'}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-1">Modifier</button></a>--}}
+                    <a href="{{route('user.edit',Auth::user())}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-1">Modifier</button></a>
                 </div>
             </div>
         </div>

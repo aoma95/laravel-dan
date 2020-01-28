@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -41,4 +42,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Skill')->withPivot('level');
     }
+
+//    public function IsAdmin(){
+//        return true;
+//    }
 }

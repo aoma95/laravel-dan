@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\SkillUser;
+
+//use DebugBar\DebugBar;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use App\Skill;
 use App\User;
@@ -45,21 +48,26 @@ class SkillController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * * @param  int  $id
+     * @param Request $request
+     * @param User $user
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
+//        $this->authorize('store',$user->getEmail());
+//        $this->authorize('store', $user);
         $request->validate([
             'Skill'=>'required',
         ]);
-        $user = User::find($request->post("id"));
+
+        $Us = User::find($request->post("id"));
         $skill= Skill::find($request->post("Skill"));
-        $user->skills()->attach($skill, array('level' => 0));
+        $Us->skills()->attach($skill, array('level' => 0));
         $id=$request->post("id");
         $redi ="/skill/$id/edit";
         return redirect($redi);
+
     }
 
     /**
@@ -76,15 +84,17 @@ class SkillController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param User $user
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit($id)
+    public function edit($id,User $user)
     {
         //
-        $user = User::find($id);
+        $this->authorize('edit',$user);
+        $userSkill = User::find($id);
         $skillsId=[];
-        foreach ($user->skills()->get() as $element){
+        foreach ($userSkill->skills()->get() as $element){
             array_push($skillsId,$element->id);
         }
         return view('skill.edit',compact('skillsId'));
@@ -93,31 +103,39 @@ class SkillController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @param User $user
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id,User $user)
     {
+        $this->authorize('update',$user);
        foreach ($request->except('_token') as $idSkill =>$value){
            $user = User::find($id);
            $skill= Skill::find($idSkill);
 
            $user->skills()->updateExistingPivot($skill, array('level' => $value), false);
        }
+//        $redi ="/skill/$id/edit";
         return redirect('/home');
+       // return redirect('/home');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * *
+     * @param User $users
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $id)
+    public function destroy(User $users, Request $request,$id)
     {
         //
+//        $this->authorize('delete',$users);
         $request->validate([
             'Skill'=>'required',
         ]);
