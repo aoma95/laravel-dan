@@ -26,7 +26,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        if(auth()->user()->can('viewAny', User::class)){
+            $User= User::all();
+            return view('user.show',compact('User'));
+        }
+        else{
+            return view('/home');
+        }
     }
 
     /**
@@ -56,9 +62,9 @@ class UserController extends Controller
      * @param int $id
      * @return void
      */
-    public function show($id)
+    public function show()
     {
-        //
+
     }
 
     /**
@@ -68,12 +74,18 @@ class UserController extends Controller
      * @return Response
      * @throws AuthorizationException
      */
-    public function edit(User $id)
+    public function edit($id)
     {
         //
-        $this->authorize('edit', $id);
-        $user = User::find($id);
-        return view('user.edit',compact('user'));
+        if (auth()->user()->can('edit', User::class)) {
+            if (auth()->user()->IsAdmin()) {
+                $user = User::find($id);
+                return view('user.edit', compact('user'));
+            } else {
+                $user = User::find(auth()->user()->id);
+                return view('user.edit', compact('user'));
+            }
+        }
     }
 
     /**
@@ -88,7 +100,7 @@ class UserController extends Controller
     public function update(Request $request,User $user)
     {
         $this->authorize('update', $user);
-        $request->validate([
+        $data = $request->validate([
             'firstname'=>'required',
             'lastname'=>'required',
             'bio'=>'required',
@@ -96,12 +108,12 @@ class UserController extends Controller
             'email'=>'required'
         ]);
         $userChange = User::find($user->id);
-        $userChange->firstname = $request->get('firstname');
-        $userChange->lastname = $request->get('lastname');
-        $userChange->bio = $request->get('bio');
-        $userChange->name = $request->get('name');
-        $userChange->email= $request->get('email');
-        $userChange->save();
+//        $userChange->firstname = $request->get('firstname');
+//        $userChange->lastname = $request->get('lastname');
+//        $userChange->bio = $request->get('bio');
+//        $userChange->name = $request->get('name');
+//        $userChange->email= $request->get('email');
+        $userChange->update($data);
         return redirect('/home');
     }
 
@@ -112,6 +124,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (auth()->user()->can('delete', User::class)) {
+//            $request->validate([
+//                'id' => 'required',
+//            ]);
+            $User = User::find($id);
+            $User->delete();
+            $redi = "/user";
+            return redirect($redi);
+        }
+        return view('/home');
     }
 }

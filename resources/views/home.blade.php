@@ -23,6 +23,7 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->role ==='user')
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Compétence</div>
@@ -38,6 +39,23 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if (auth()->user()->role ==='admin')
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Les utilisateurs</div>
+                    <div class="card-body">
+                        <a href="{{route('user.index')}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-2">Voir tout les utilisateurs</button></a>
+                    </div>
+                </div>
+                <div class="card mt-1">
+                    <div class="card-header">Les Compétences</div>
+                    <div class="card-body">
+                        <a href="{{route('skill.edit',Auth::user())}}"><button type="button" class="btn btn-dark btn-lg btn-block mt-2">Modifier les compétences</button></a>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

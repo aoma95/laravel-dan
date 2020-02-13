@@ -68,7 +68,7 @@ class SkillPolicy
     public function delete(User $user)
     {
         //
-//        return auth()->user() === $user;
+        return auth()->user() === $user;
     }
 
     /**
@@ -97,11 +97,10 @@ class SkillPolicy
 
     public  function edit(User $user){
         return auth()->user() === $user;
+//        return true;
     }
 
-//    public  function store(User $user){
-//
-//        return auth()->user() === $user;
-//        return auth()->user();
-//    }
+    public  function store(User $user){
+       return auth()->user() === $user;
+   }
 }

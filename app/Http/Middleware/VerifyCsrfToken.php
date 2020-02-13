@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+//        'http://laravel-dan-debian/user/1'
     ];
 }

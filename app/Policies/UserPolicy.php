@@ -2,6 +2,8 @@
 namespace App\Policies;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+
 class UserPolicy
 {
     use HandlesAuthorization;
@@ -12,9 +14,9 @@ class UserPolicy
      * @param \App\User $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny()
     {
-        //
+        return Auth()->user()->IsAdmin();
     }
 
     /**
@@ -60,9 +62,9 @@ class UserPolicy
      * @param \App\User $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete()
     {
-        //
+        return true;
     }
 
     /**
@@ -89,8 +91,13 @@ class UserPolicy
         //
     }
 
-    public function edit(User $user, User $model)
+    public function edit(User $user)
     {
+        if (auth()->user()->role === 'admin') {
+            return true;
+        } else {
         return auth()->user() === $user;
+    }
+//        return false;
     }
 }

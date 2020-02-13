@@ -43,7 +43,13 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Skill')->withPivot('level');
     }
 
-//    public function IsAdmin(){
-//        return true;
-//    }
+    public function IsAdmin()
+    {
+        if ($this->role === 'admin') {
+            return true;
+        }
+        else{
+        return false;
+    }
+    }
 }
