@@ -31,7 +31,7 @@
                     <ul class="list-group list-group-flush">
                         @foreach (Auth::user()->skills()->get() as $skill)
                             <il>{{ $skill->name }} : level {{$skill->pivot->level}}<div class="progress">
-                                    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{$skill->pivot->level*20}}%" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5"></div>
+                                    <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width: {{$skill->pivot->level*20}}%" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5"></div>
                                 </div></il>
                         @endforeach
                     </ul>

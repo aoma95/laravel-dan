@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">Information Personnelle</div>
                     <div class="card-body">
-                                <form method="POST" class="form" name="formulaire" action="{{route('user.update', Auth()->user()->id)}}">
+                                <form method="POST" class="form" name="formulaire" action="{{route('user.update', $user->id)}}">
                                     @method('PATCH')
                                     @csrf
                                     <div class="form-group">

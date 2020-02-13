@@ -100,21 +100,27 @@ class UserController extends Controller
     public function update(Request $request,User $user)
     {
 //        $this->authorize('update', $user);
-        $request->validate([
-            'firstname'=>'required',
-            'lastname'=>'required',
-            'bio'=>'required',
-            'name'=>'required',
-            'email'=>'required'
-        ]);
-        $userChange = User::find($user->id);
-        $userChange->firstname = $request->get('firstname');
-        $userChange->lastname = $request->get('lastname');
-        $userChange->bio = $request->get('bio');
-        $userChange->name = $request->get('name');
-        $userChange->email= $request->get('email');
-        $userChange->update();
-        return redirect('/home');
+        if (auth()->user()->can('delete', User::class)) {
+            $request->validate([
+                'firstname' => 'required',
+                'lastname' => 'required',
+                'bio' => 'required',
+                'name' => 'required',
+                'email' => 'required'
+            ]);
+            $userChange = User::find($user->id);
+            $userChange->firstname = $request->get('firstname');
+            $userChange->lastname = $request->get('lastname');
+            $userChange->bio = $request->get('bio');
+            $userChange->name = $request->get('name');
+            $userChange->email = $request->get('email');
+            $userChange->update();
+            if(auth()->user()->IsAdmin()){
+                return redirect('/user');
+            }else{
+                return redirect('/home');
+            }
+        }
     }
 
     /**
