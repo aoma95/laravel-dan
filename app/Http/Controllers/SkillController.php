@@ -96,16 +96,19 @@ class SkillController extends Controller
     {
         //
 //        $this->authorize('edit',$user);
-        if(auth()->user()->can('edit', Skill::class)){
+        if (auth()->user()->can('edit', Skill::class) && !auth()->user()->IsAdmin()) {
             $userSkill = User::find($id);
-            $skillsId=[];
-            foreach ($userSkill->skills()->get() as $element){
-                array_push($skillsId,$element->id);
+            $skillsId = [];
+            foreach ($userSkill->skills()->get() as $element) {
+                array_push($skillsId, $element->id);
             }
             return view('skill.edit',compact('skillsId'));
-
         }
-        return view('/home');
+        if (auth()->user()->IsAdmin()) {
+            return view('skill.edit');
+        } else {
+            return view('/home');
+        }
     }
 
     /**
@@ -147,12 +150,18 @@ class SkillController extends Controller
     public function destroy(User $users, Request $request,$id)
     {
         //
-        if (auth()->user()->can('edit', Skill::class)) {
+        if (auth()->user()->can('edit', Skill::class) && !auth()->user()->IsAdmin()) {
             $request->validate([
                 'Skill' => 'required',
             ]);
             $user = User::find($id);
             $user->skills()->detach($request->post("Skill"));
+            $redi = "/skill/$id/edit";
+            return redirect($redi);
+        }
+        if (auth()->user()->IsAdmin()){
+            $skill = Skill::find($request->post('id'));
+            $skill->delete();
             $redi = "/skill/$id/edit";
             return redirect($redi);
         }
